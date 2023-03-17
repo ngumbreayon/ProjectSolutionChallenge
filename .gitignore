@@ -1,32 +1,92 @@
-# Prerequisites
-*.d
+#define Sensorgas1 A1
+#define Sensorgas2 A2
+#define Buzzer A5
+#define REDLED1 5
+#define Sensorflame1 A3
+#define Sensorflame2 A4
+#define REDLED2 9
+#define Outlet1 2
+#define Outlet2 3
+#define Outlet3 4
+#define Outlet4 6
+#define Outlet12 7
+#define Outlet22 8
+#define Outlet32 10
+#define Outlet42 11
+int sensorThres = 300; 
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+void setup() {
+  Serial.begin(9600);
+  pinMode(Sensorgas1, INPUT);
+  pinMode(Sensorgas2, INPUT);
+  pinMode(Sensorflame1, INPUT);
+  pinMode(Sensorflame2, INPUT);
+  pinMode(REDLED1, OUTPUT);
+  pinMode(REDLED2, OUTPUT);  
+  pinMode(Buzzer, OUTPUT);   
+}
 
-# Precompiled Headers
-*.gch
-*.pch
+void loop() {
+  int value1 = analogRead(Sensorgas1);
+  int value2 = analogRead(Sensorgas2);
+  int value3 = analogRead(Sensorflame1);
+  int value4 = analogRead(Sensorflame2);
+  Serial.println("GasValue1:");
+  Serial.println(value1);
+  Serial.println("GasValue2:");
+  Serial.println(value2);
+  Serial.println("flameValue1:");
+  Serial.println(value3);
+  Serial.println("flameValue1:");
+  Serial.println(value4);
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+  if (value1 >= sensorThres || value2 >= sensorThres)
+  {
+    delay (100);
+    digitalWrite(REDLED1, HIGH);
+    delay (100);
+    digitalWrite(REDLED1, LOW);
+    delay (100);
+    analogWrite(Buzzer, 1023);
+    if (value1 >= sensorThres)
+    {
+digitalWrite(Outlet1, 1);
+digitalWrite(Outlet12, 1);
+    }
+    if (value2 >= sensorThres)
+    {
+digitalWrite(Outlet2, 1);
+digitalWrite(Outlet22, 1);
+    }
+   }
+     else
+  {
+    analogWrite(Buzzer, 0);
+  }
 
-# Fortran module files
-*.mod
-*.smod
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+  if (value3 <= 700 || value4 <= 700 )
+  {
+    delay (100);
+    digitalWrite(REDLED2, HIGH);
+    delay (100);
+    digitalWrite(REDLED2, LOW);
+    delay (100);
+    analogWrite(Buzzer, 1023);
+       if (value3 <= 700)
+    {
+digitalWrite(Outlet3, 1);
+digitalWrite(Outlet32, 1);
+    }
+    if (value4 <= 700)
+    {
+digitalWrite(Outlet4, 1);
+digitalWrite(Outlet42, 1);
+    }
+  }
+  else
+  {
+    analogWrite(Buzzer, 0);
+  }
 
-# Executables
-*.exe
-*.out
-*.app
+}
